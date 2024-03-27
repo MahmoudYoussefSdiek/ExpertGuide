@@ -24,6 +24,7 @@ class Book(db.Model):
     Enabled = db.Column(db.Boolean)
 
     def to_dict(self):
+        book_location = self.BookLocation.replace(' ', '^')
         return {
             'book_id': self.book_id,
             'title': self.title,
@@ -31,7 +32,7 @@ class Book(db.Model):
             'shortDescription': self.shortDescription,
             'fullDescription': self.fullDescription,
             'category': self.category,
-            'BookLocation': self.BookLocation,
+            'BookLocation': book_location,
             'CreatedBy': self.CreatedBy,
             'CreatedDT': self.CreatedDT.isoformat() if self.CreatedDT else None,
             'UpdatedBy': self.UpdatedBy,

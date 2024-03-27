@@ -39,7 +39,8 @@ def book_routes(app, db):
         book = Book.query.get(book_id)
         if book is None:
             return jsonify({'error': 'Book not found'}), 404
-        book.update(**data)
+        for key, value in data.items():
+            setattr(book, key, value)
         db.session.commit()
         return jsonify(book.to_dict()), 200
 
@@ -59,4 +60,4 @@ def book_routes(app, db):
         book = Book.query.get(book_id)
         if book is None:
             return jsonify({'error': 'Book not found'}), 404
-        return send_file(book.bookLocation, as_attachment=True)
+        return send_file(book.BookLocation, as_attachment=True)
