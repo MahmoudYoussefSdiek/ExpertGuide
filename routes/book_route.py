@@ -12,11 +12,7 @@ def book_routes(app, db):
             'meta_data': {
                 'total_books': len(books),
             },
-            'books': [
-                book.short_description()
-                for book in books
-                if book.short_description() is not None
-            ]
+            'books': [book.short_description() for book in books if book.short_description() is not None]
         }), 200
 
     # Get a specific book
@@ -34,7 +30,7 @@ def book_routes(app, db):
         new_book = Book(**data)
         db.session.add(new_book)
         db.session.commit()
-        return jsonify(new_book), 201
+        return jsonify(new_book.to_dict()), 201
 
     # Update a book
     @app.route('/books/<int:book_id>', methods=['PUT'])
