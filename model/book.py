@@ -1,5 +1,4 @@
 from database import db
-from flask import jsonify
 
 
 class Book(db.Model):
@@ -11,20 +10,20 @@ class Book(db.Model):
     shortDescription = db.Column(db.Text)
     fullDescription = db.Column(db.Text)
     category = db.Column(db.String(20))
-    BookLocation = db.Column(db.String(255))
-    CreatedBy = db.Column(db.Integer, db.ForeignKey(
+    bookLocation = db.Column(db.String(255))
+    createdBy = db.Column(db.Integer, db.ForeignKey(
         'admin.admin_id'), nullable=True)
-    CreatedDT = db.Column(db.DateTime, nullable=True)
-    UpdatedBy = db.Column(db.Integer, db.ForeignKey(
+    createdDate = db.Column(db.DateTime, nullable=True)
+    updatedBy = db.Column(db.Integer, db.ForeignKey(
         'admin.admin_id'), nullable=True)
-    UpdatedDT = db.Column(db.DateTime, nullable=True)
-    DeletedBy = db.Column(db.Integer, db.ForeignKey(
+    updatedDate = db.Column(db.DateTime, nullable=True)
+    deletedBy = db.Column(db.Integer, db.ForeignKey(
         'admin.admin_id'), nullable=True)
-    DeletedDT = db.Column(db.DateTime, nullable=True)
-    Enabled = db.Column(db.Boolean)
+    deletedDate = db.Column(db.DateTime, nullable=True)
+    enabled = db.Column(db.Boolean)
 
     def to_dict(self):
-        book_location = self.BookLocation.replace(' ', '^')
+        book_location = self.bookLocation.replace(' ', '^')
         return {
             'book_id': self.book_id,
             'title': self.title,
@@ -32,18 +31,18 @@ class Book(db.Model):
             'shortDescription': self.shortDescription,
             'fullDescription': self.fullDescription,
             'category': self.category,
-            'BookLocation': book_location,
-            'CreatedBy': self.CreatedBy,
-            'CreatedDT': self.CreatedDT.isoformat() if self.CreatedDT else None,
-            'UpdatedBy': self.UpdatedBy,
-            'UpdatedDT': self.UpdatedDT.isoformat() if self.UpdatedDT else None,
-            'DeletedBy': self.DeletedBy,
-            'DeletedDT': self.DeletedDT.isoformat() if self.DeletedDT else None,
-            'Enabled': self.Enabled
+            'bookLocation': book_location,
+            'createdBy': self.createdBy,
+            'createdDate': self.createdDate.isoformat() if self.createdDate else None,
+            'updatedBy': self.updatedBy,
+            'updatedDate': self.updatedDate.isoformat() if self.updatedDate else None,
+            'deletedBy': self.deletedBy,
+            'deletedDate': self.deletedDate.isoformat() if self.deletedDate else None,
+            'enabled': self.enabled
         }
 
     def short_description(self):
-        if not self.Enabled:
+        if not self.enabled:
             return None
         return {
             'book_id': self.book_id,
@@ -53,15 +52,15 @@ class Book(db.Model):
         }
 
     def full_description(self):
-        if not self.Enabled:
+        if not self.enabled:
             return None
         return {
             'book_id': self.book_id,
             'title': self.title,
+            'author': self.author,
             'short_description': self.shortDescription,
             'long_description': self.fullDescription,
             'category': self.category,
-            'Enabled': self.Enabled,
-            'CreatedAt': self.CreatedDT,
-            'UpdatedAt': self.UpdatedDT,
+            'CreatedAt': self.createdDate,
+            'UpdatedAt': self.updatedDate,
         }

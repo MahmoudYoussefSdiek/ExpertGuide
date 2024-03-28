@@ -7,21 +7,23 @@ def book_routes(app, db):
     # Get all books
     @app.route('/books', methods=['GET'])
     def get_books():
-        books = Book.query.all()
+        books = Book.query.filter_by(enabled=True).all()
+        if not books:
+            return jsonify({'error': 'No books found'}), 404
         return jsonify({
             'meta_data': {
                 'total_books': len(books),
             },
-            'books': [book.short_description() for book in books if book.short_description() is not None]
+            'books': [book.short_description() for book in books]
         }), 200
 
     # Get a specific book
     @app.route('/books/<int:book_id>', methods=['GET'])
     def get_book(book_id):
         book = Book.query.get(book_id)
-        if book is None:
+        if book is None or not book.enabled:
             return jsonify({'error': 'Book not found'}), 404
-        return book.full_description(), 200
+        return jsonify(book.full_description()), 200
 
     # Create a new book
     @app.route('/books', methods=['POST'])
@@ -39,10 +41,16 @@ def book_routes(app, db):
         book = Book.query.get(book_id)
         if book is None:
             return jsonify({'error': 'Book not found'}), 404
+        # if book.enabled is False:
+        #     return jsonify({'book enabled has been changed' : 'disabled'}), 404
         for key, value in data.items():
             setattr(book, key, value)
         db.session.commit()
-        return jsonify(book.to_dict()), 200
+        updated_book = Book.query.get(book_id)
+        if updated_book is None or updated_book.enabled is False:
+            return jsonify({'book enabled has been changed' : 'disabled'}), 200
+        else:
+            return jsonify(updated_book.full_description()), 200
 
     # Delete a book
     @app.route('/books/<int:book_id>', methods=['DELETE'])
@@ -60,4 +68,4 @@ def book_routes(app, db):
         book = Book.query.get(book_id)
         if book is None:
             return jsonify({'error': 'Book not found'}), 404
-        return send_file(book.BookLocation, as_attachment=True)
+        return send_file(book.bookLocation, as_attachment=True)
