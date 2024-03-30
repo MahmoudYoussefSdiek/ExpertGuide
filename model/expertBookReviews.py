@@ -10,3 +10,13 @@ class ExpertBookReviews(db.Model):
     rating = db.Column(db.Integer)
     book_review = db.Column(db.Text)
     book_summary = db.Column(db.Text)
+
+
+def short_description(self):
+
+        return {
+            'review_id': self.review_id,
+            'expert_id': self.expert_id,
+            'book_id': self.book_id,
+            'rating': self.rating
+        }
