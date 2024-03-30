@@ -1,5 +1,6 @@
 from flask import jsonify, request, send_file
 from model.book import Book
+from collections import OrderedDict
 
 
 def book_routes(app, db):
@@ -10,12 +11,16 @@ def book_routes(app, db):
         books = Book.query.filter_by(enabled=True).all()
         if not books:
             return jsonify({'error': 'No books found'}), 404
-        return jsonify({
-            'meta_data': {
-                'total_books': len(books),
+        return jsonify([
+            {
+                'meta_data': {
+                    'total_books': len(books),
+                }
             },
-            'books': [book.short_description() for book in books]
-        }), 200
+            {
+                'books': [book.short_description() for book in books]
+            }
+        ]), 200
 
     # Get a specific book
     @app.route('/books/<int:book_id>', methods=['GET'])
@@ -48,7 +53,7 @@ def book_routes(app, db):
         db.session.commit()
         updated_book = Book.query.get(book_id)
         if updated_book is None or updated_book.enabled is False:
-            return jsonify({'book enabled has been changed' : 'disabled'}), 200
+            return jsonify({'book enabled has been changed': 'disabled'}), 200
         else:
             return jsonify(updated_book.full_description()), 200
 
