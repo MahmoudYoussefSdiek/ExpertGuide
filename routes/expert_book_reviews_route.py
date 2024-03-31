@@ -55,6 +55,7 @@ def expert_book_reviews_route(app, db):
         return jsonify(review.full_description()), 200
 
     # Delete a book review
+    # This route is for the expert to delete a review
     @app.route('/expert/book/reviews/<int:review_id>', methods=['DELETE'])
     def delete_review(review_id):
         review = ExpertBookReviews.query.get(review_id)
