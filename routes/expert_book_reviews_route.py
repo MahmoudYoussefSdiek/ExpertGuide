@@ -8,17 +8,17 @@ def expert_book_reviews_route(app, db):
     # This route is for the expert to get all books
     @app.route('/expert/book/reviews', methods=['GET'])
     def get_book_reviews():
-        book_reviews = ExpertBookReviews.query.all()
-        if not book_reviews:
+        all_book_reviews = ExpertBookReviews.query.all()
+        if not all_book_reviews:
             return jsonify({'error': 'No books reveiwes found'}), 404
         return jsonify([
             {
                 'meta_data': {
-                    'total_reviews': len(book_reviews),
+                    'total_reviews': len(all_book_reviews),
                 }
             },
             {
-                'books reviews': [book_reviews.short_description() for book_reviews in book_reviews]
+                'books reviews': [book_review.short_description() for book_review in all_book_reviews]
             }
         ]), 200
 
@@ -34,7 +34,7 @@ def expert_book_reviews_route(app, db):
     # Create a new review
     # This route is for the expert to create a review
     @app.route('/expert/book/reviews', methods=['POST'])
-    def create_review():
+    def create_book_review():
         data = request.get_json()
         new_review = ExpertBookReviews(**data)
         db.session.add(new_review)
@@ -44,7 +44,7 @@ def expert_book_reviews_route(app, db):
     # Update a book review
     # This route is for the expert to update a review
     @app.route('/expert/book/reviews/<int:review_id>', methods=['PUT'])
-    def update_review(review_id):
+    def update_book_review(review_id):
         data = request.get_json()
         review = ExpertBookReviews.query.get(review_id)
         if review is None:
@@ -57,7 +57,7 @@ def expert_book_reviews_route(app, db):
     # Delete a book review
     # This route is for the expert to delete a review
     @app.route('/expert/book/reviews/<int:review_id>', methods=['DELETE'])
-    def delete_review(review_id):
+    def delete_book_review(review_id):
         review = ExpertBookReviews.query.get(review_id)
         if review is None:
             return jsonify({'error': 'Review not found'}), 404

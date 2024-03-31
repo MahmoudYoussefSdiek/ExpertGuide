@@ -34,7 +34,7 @@ def expert_roadmap_reviews_route(app, db):
     # Create a new Roadmap review
     # This route is for the expert to create a roadmap review
     @app.route('/expert/roadmap/reviews', methods=['POST'])
-    def create_review():
+    def create_roadmap_review():
         data = request.get_json()
         new_review = ExpertRoadmapReviews(**data)
         db.session.add(new_review)
@@ -44,7 +44,7 @@ def expert_roadmap_reviews_route(app, db):
     # Update a  Roadmap review
     # This route is for the expert to update a Roadmap review
     @app.route('/expert/roadmap/reviews/<int:review_id>', methods=['PUT'])
-    def update_review(review_id):
+    def update_roadmap_review(review_id):
         data = request.get_json()
         review = ExpertRoadmapReviews.query.get(review_id)
         if review is None:
@@ -57,7 +57,7 @@ def expert_roadmap_reviews_route(app, db):
     # Delete a roadmap review
     # This route is for the expert to delete a roadmap review
     @app.route('/expert/roadmap/reviews/<int:review_id>', methods=['DELETE'])
-    def delete_review(review_id):
+    def delete_roadmap_review(review_id):
         review = ExpertRoadmapReviews.query.get(review_id)
         if review is None:
             return jsonify({'error': 'Review not found'}), 404
