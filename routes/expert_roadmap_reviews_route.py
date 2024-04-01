@@ -18,7 +18,7 @@ def expert_roadmap_reviews_route(app, db):
                 }
             },
             {
-                'Roadmap reviews': [roadmap_reviews.short_description() for roadmap in roadmap_reviews]
+                'Roadmap reviews': [roadmap.short_description() for roadmap in roadmap_reviews]
             }
         ]), 200
 
