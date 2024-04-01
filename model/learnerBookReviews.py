@@ -8,3 +8,21 @@ class LearnerBookReviews(db.Model):
     learner_id = db.Column(db.Integer, db.ForeignKey('learner.learner_id'))
     rating = db.Column(db.Integer)
     book_review = db.Column(db.Text)
+
+    def short_description(self):
+
+        return {
+            'review_id': self.review_id,
+            'book_id': self.book_id,
+            'rating': self.rating
+        }
+
+    def full_description(self):
+
+        return {
+            'review_id': self.review_id,
+            'learner_id': self.learner_id,
+            'book_id': self.book_id,
+            'rating': self.rating,
+            'book_review': self.book_review,
+        }
